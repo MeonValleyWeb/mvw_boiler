@@ -1,0 +1,4 @@
+node_modules/
+
+# apple
+.DS_Store
