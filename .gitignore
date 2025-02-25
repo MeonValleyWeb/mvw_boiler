@@ -1,4 +1,9 @@
-node_modules/
+# Application
+node_modules
 
 # apple
 .DS_Store
+
+# Dotenv
+.env
+
