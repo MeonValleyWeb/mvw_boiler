@@ -1,0 +1,22 @@
+/**
+ * Theme setup file: style.css
+ *
+ * This file contains theme information.
+ */
+
+/*
+Theme Name: TailwindWP Starter
+Theme URI: https://github.com/yourusername/tailwindwp-starter
+Author: Your Name
+Author URI: https://yourwebsite.com
+Description: A lightweight WordPress starter theme with TailwindCSS for Bedrock
+Version: 1.0.0
+License: MIT
+License URI: https://opensource.org/licenses/MIT
+Text Domain: tailwindwp
+*/
+
+/* 
+The rest of the styling comes from the compiled Tailwind CSS.
+This file is just for WordPress theme identification.
+*/

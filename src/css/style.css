@@ -1,0 +1,59 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+/* Custom components */
+@layer components {
+  /* WordPress core styles */
+  .wp-caption {
+    @apply max-w-full;
+  }
+
+  .wp-caption-text {
+    @apply text-sm italic mt-2;
+  }
+
+  .screen-reader-text {
+    @apply sr-only;
+  }
+  
+  .alignleft {
+    @apply float-left mr-4;
+  }
+  
+  .alignright {
+    @apply float-right ml-4;
+  }
+  
+  .aligncenter {
+    @apply mx-auto block;
+  }
+  
+  /* Contact Form 7 styling */
+  .wpcf7-form input[type="text"],
+  .wpcf7-form input[type="email"],
+  .wpcf7-form input[type="tel"],
+  .wpcf7-form textarea {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500;
+  }
+  
+  .wpcf7-form input[type="submit"] {
+    @apply w-full md:w-auto px-6 py-3 bg-primary-600 text-white font-medium rounded-md shadow-sm hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors;
+  }
+  
+  .wpcf7-not-valid-tip {
+    @apply text-red-600 text-sm mt-1;
+  }
+  
+  .wpcf7-response-output {
+    @apply mt-4 p-3 rounded-md text-sm;
+  }
+  
+  .wpcf7-validation-errors {
+    @apply bg-red-100 text-red-800 border border-red-300;
+  }
+  
+  .wpcf7-mail-sent-ok {
+    @apply bg-green-100 text-green-800 border border-green-300;
+  }
+}
