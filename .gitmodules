@@ -1,0 +1,3 @@
+[submodule "web/app/themes/mvw_boiler"]
+	path = web/app/themes/mvw_boiler
+	url = https://github.com/MeonValleyWeb/mvw_boiler.git
