@@ -1,9 +1,79 @@
-# Application
-node_modules
+# Dependency directories
+/node_modules/
+/vendor/
 
-# apple
-.DS_Store
+# Distribution directory (compiled assets)
+/dist/
 
-# Dotenv
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
 .env
+.env.*
+!.env.example
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE and Editor folders
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+*.komodoproject
+.komodotools/
+*.code-workspace
+.editorconfig
+
+# WordPress specific
+/wp-config.php
+/languages/
+
+# ACF generated JSON (if using local JSON)
+# Uncomment the line below if you want to ignore ACF JSON files
+# /acf-json/
+
+# Cacheing
+.sass-cache/
+*.css.map
+*.js.map
+
+# Temporary files
+*.swp
+*.bak
+*.tmp
+*~
+~*
+
+# Build tools
+.eslintcache
+.stylelintcache
+.cache/
+
+# Lock files (include or exclude based on preference)
+# package-lock.json
+# yarn.lock
+
+# Zip files
+*.zip
+*.rar
+*.7z
+*.gz
+*.tgz
+
+# Browser files 
+.browserslistrc
+
+# For Windows
+desktop.ini
 
