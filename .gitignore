@@ -77,3 +77,6 @@ Thumbs.db
 # For Windows
 desktop.ini
 
+# Development Files
+dummy-content.php
+
