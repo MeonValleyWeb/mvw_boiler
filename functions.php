@@ -15,6 +15,8 @@ define('TAILWINDWP_URI', get_template_directory_uri());
  */
 require_once TAILWINDWP_DIR . '/inc/setup.php';
 
+require_once get_template_directory() . '/inc/theme-settings.php';
+
 /**
  * Enqueue scripts and styles
  */
@@ -71,9 +73,14 @@ function tailwindwp_custom_colors() {
         return;
     }
     
-    // Get color settings from ACF options page
-    $primary_color = get_field('primary_color', 'option') ?: '#0ea5e9'; // Default blue
-    $secondary_color = get_field('secondary_color', 'option') ?: '#64748b'; // Default slate
+    // Get color settings - using tailwindwp_get_theme_setting instead of get_field with 'option'
+    $primary_color = function_exists('tailwindwp_get_theme_setting') 
+        ? tailwindwp_get_theme_setting('primary_color', '#0ea5e9')
+        : '#0ea5e9'; // Default blue
+        
+    $secondary_color = function_exists('tailwindwp_get_theme_setting')
+        ? tailwindwp_get_theme_setting('secondary_color', '#64748b')
+        : '#64748b'; // Default slate
     
     // Convert hex to RGB for alpha colors
     $primary_rgb = tailwindwp_hex_to_rgb($primary_color);
