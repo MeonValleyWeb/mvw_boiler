@@ -2,7 +2,7 @@
 /**
  * TailwindWP functions and definitions
  */
-require_once get_template_directory() . '/dummy-content.php';
+// require_once get_template_directory() . '/dummy-content.php';
 // Theme version
 define('TAILWINDWP_VERSION', '1.0.0');
 
