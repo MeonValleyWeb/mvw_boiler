@@ -1,40 +1,93 @@
 <?php
 /**
- * TailwindWP functions and definitions
+ * MeonValleyWeb Theme functions and definitions
+ *
+ * @package MeonValleyWeb
  */
-// require_once get_template_directory() . '/dummy-content.php';
+
 // Theme version
-define('TAILWINDWP_VERSION', '1.0.0');
+define('MVW_VERSION', '1.0.0');
 
 // Theme directory path/URI
-define('TAILWINDWP_DIR', get_template_directory());
-define('TAILWINDWP_URI', get_template_directory_uri());
+define('MVW_DIR', get_template_directory());
+define('MVW_URI', get_template_directory_uri());
 
 /**
  * Theme setup
  */
-require_once TAILWINDWP_DIR . '/inc/setup.php';
+function mvw_setup() {
+    // Make theme available for translation
+    load_theme_textdomain('mvw', MVW_DIR . '/languages');
 
-require_once get_template_directory() . '/inc/theme-settings.php';
+    // Add default posts and comments RSS feed links to head
+    add_theme_support('automatic-feed-links');
+
+    // Let WordPress manage the document title
+    add_theme_support('title-tag');
+
+    // Enable support for Post Thumbnails
+    add_theme_support('post-thumbnails');
+
+    // Register navigation menus
+    register_nav_menus([
+        'primary' => esc_html__('Primary Menu', 'mvw'),
+        'footer' => esc_html__('Footer Menu', 'mvw'),
+    ]);
+
+    // Switch default core markup to output valid HTML5
+    add_theme_support('html5', [
+        'search-form',
+        'comment-form',
+        'comment-list',
+        'gallery',
+        'caption',
+        'style',
+        'script',
+    ]);
+
+    // Add theme support for selective refresh for widgets
+    add_theme_support('customize-selective-refresh-widgets');
+
+    // Add support for editor styles
+    add_theme_support('editor-styles');
+
+    // Add support for responsive embeds
+    add_theme_support('responsive-embeds');
+
+    // Add support for full and wide align images
+    add_theme_support('align-wide');
+
+    // Add support for custom logo
+    add_theme_support('custom-logo', [
+        'height'      => 250,
+        'width'       => 250,
+        'flex-width'  => true,
+        'flex-height' => true,
+    ]);
+
+    // Set content width
+    $GLOBALS['content_width'] = apply_filters('mvw_content_width', 1280);
+}
+add_action('after_setup_theme', 'mvw_setup');
 
 /**
  * Enqueue scripts and styles
  */
-function tailwindwp_scripts() {
+function mvw_scripts() {
     // Enqueue main stylesheet
     wp_enqueue_style(
-        'tailwindwp-styles', 
-        TAILWINDWP_URI . '/dist/css/main.css', 
+        'mvw-styles', 
+        MVW_URI . '/dist/css/main.css', 
         [], 
-        TAILWINDWP_VERSION
+        MVW_VERSION
     );
     
     // Enqueue main JavaScript
     wp_enqueue_script(
-        'tailwindwp-scripts', 
-        TAILWINDWP_URI . '/dist/js/main.js', 
+        'mvw-scripts', 
+        MVW_URI . '/dist/js/main.js', 
         [], 
-        TAILWINDWP_VERSION, 
+        MVW_VERSION, 
         true
     );
     
@@ -43,48 +96,41 @@ function tailwindwp_scripts() {
         wp_enqueue_script('comment-reply');
     }
 }
-add_action('wp_enqueue_scripts', 'tailwindwp_scripts');
+add_action('wp_enqueue_scripts', 'mvw_scripts');
 
 /**
- * ACF integration
+ * Register ACF options page
  */
-require_once TAILWINDWP_DIR . '/inc/acf.php';
-
-/**
- * Custom shortcodes
- */
-require_once TAILWINDWP_DIR . '/inc/shortcodes.php';
-
-/**
- * Widget areas
- */
-require_once TAILWINDWP_DIR . '/inc/widgets.php';
-
-/**
- * Theme customizer options
- */
-require_once TAILWINDWP_DIR . '/inc/customizer.php';
+function mvw_acf_options_page() {
+    if (function_exists('acf_add_options_page')) {
+        acf_add_options_page([
+            'page_title' => 'Theme Options',
+            'menu_title' => 'Theme Options',
+            'menu_slug' => 'theme-options',
+            'capability' => 'edit_theme_options',
+            'redirect' => false,
+            'icon_url' => 'dashicons-admin-customizer',
+            'position' => 59,
+        ]);
+    }
+}
+add_action('acf/init', 'mvw_acf_options_page');
 
 /**
  * Generate inline CSS from theme settings
  */
-function tailwindwp_custom_colors() {
+function mvw_custom_colors() {
     if (!function_exists('get_field')) {
         return;
     }
     
-    // Get color settings - using tailwindwp_get_theme_setting instead of get_field with 'option'
-    $primary_color = function_exists('tailwindwp_get_theme_setting') 
-        ? tailwindwp_get_theme_setting('primary_color', '#0ea5e9')
-        : '#0ea5e9'; // Default blue
-        
-    $secondary_color = function_exists('tailwindwp_get_theme_setting')
-        ? tailwindwp_get_theme_setting('secondary_color', '#64748b')
-        : '#64748b'; // Default slate
+    // Get color settings
+    $primary_color = get_field('theme_colors_primary_color', 'option') ?: '#0ea5e9';
+    $secondary_color = get_field('theme_colors_secondary_color', 'option') ?: '#64748b';
     
     // Convert hex to RGB for alpha colors
-    $primary_rgb = tailwindwp_hex_to_rgb($primary_color);
-    $secondary_rgb = tailwindwp_hex_to_rgb($secondary_color);
+    $primary_rgb = mvw_hex_to_rgb($primary_color);
+    $secondary_rgb = mvw_hex_to_rgb($secondary_color);
     
     // Create CSS variables
     $css = "
@@ -106,18 +152,23 @@ function tailwindwp_custom_colors() {
         background-color: var(--color-primary) !important;
         filter: brightness(0.9) !important;
     }
-    /* Add more overrides as needed */
+    .bg-secondary-600 {
+        background-color: var(--color-secondary) !important;
+    }
+    .text-secondary-600 {
+        color: var(--color-secondary) !important;
+    }
     ";
     
     // Output the CSS
-    wp_add_inline_style('tailwindwp-styles', $css);
+    wp_add_inline_style('mvw-styles', $css);
 }
-add_action('wp_enqueue_scripts', 'tailwindwp_custom_colors', 20);
+add_action('wp_enqueue_scripts', 'mvw_custom_colors', 20);
 
 /**
  * Helper function to convert HEX to RGB
  */
-function tailwindwp_hex_to_rgb($hex) {
+function mvw_hex_to_rgb($hex) {
     $hex = str_replace('#', '', $hex);
     
     if (strlen($hex) == 3) {
@@ -134,61 +185,43 @@ function tailwindwp_hex_to_rgb($hex) {
 }
 
 /**
- * Add color picker fields to Theme Settings
+ * Get theme option helper function
  */
-if (function_exists('acf_add_local_field_group')) {
-    acf_add_local_field_group([
-        'key' => 'group_theme_colors',
-        'title' => 'Theme Colors',
-        'fields' => [
-            [
-                'key' => 'field_primary_color',
-                'label' => 'Primary Color',
-                'name' => 'primary_color',
-                'type' => 'color_picker',
-                'instructions' => 'Choose the main color for buttons, links, and accents',
-                'required' => 0,
-                'conditional_logic' => 0,
-                'wrapper' => [
-                    'width' => '50',
-                    'class' => '',
-                    'id' => '',
-                ],
-                'default_value' => '#0ea5e9',
-            ],
-            [
-                'key' => 'field_secondary_color',
-                'label' => 'Secondary Color',
-                'name' => 'secondary_color',
-                'type' => 'color_picker',
-                'instructions' => 'Choose the secondary color for the theme',
-                'required' => 0,
-                'conditional_logic' => 0,
-                'wrapper' => [
-                    'width' => '50',
-                    'class' => '',
-                    'id' => '',
-                ],
-                'default_value' => '#64748b',
-            ],
-        ],
-        'location' => [
-            [
-                [
-                    'param' => 'options_page',
-                    'operator' => '==',
-                    'value' => 'theme-settings',
-                ],
-            ],
-        ],
-        'menu_order' => 10,
-        'position' => 'normal',
-        'style' => 'default',
-        'label_placement' => 'top',
-        'instruction_placement' => 'label',
-        'hide_on_screen' => '',
-        'active' => true,
-        'description' => '',
-        'show_in_rest' => 0,
-    ]);
+function mvw_get_option($option_name, $default = '') {
+    if (!function_exists('get_field')) {
+        return $default;
+    }
+    
+    $value = get_field($option_name, 'option');
+    return $value !== null && $value !== '' ? $value : $default;
+}
+
+/**
+ * Email Delivery Configuration
+ * 
+ * Note: Email delivery is handled via a dedicated plugin (WP Mail SMTP or similar)
+ * Configure the plugin to use Amazon SES credentials stored in environment variables
+ * 
+ * For Bedrock:
+ * 1. Add SES credentials to .env file
+ * 2. Add configuration to config/application.php
+ * 3. Install and configure WP Mail SMTP plugin
+ */
+
+/**
+ * Load theme files and components
+ */
+$includes = [
+    'inc/acf-fields.php',              // ACF fields registration
+    'inc/blocks.php',                  // Block templates
+    'inc/template-functions.php',      // Custom template functions
+    'inc/template-tags.php',           // Template tags
+    'inc/widgets.php',                 // Widget areas
+    'inc/customizer.php',              // Theme customizer
+];
+
+foreach ($includes as $file) {
+    if (file_exists(MVW_DIR . '/' . $file)) {
+        require_once MVW_DIR . '/' . $file;
+    }
 }

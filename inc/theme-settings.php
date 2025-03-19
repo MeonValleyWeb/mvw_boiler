@@ -94,7 +94,7 @@ function tailwindwp_settings_page_html() {
             } else {
                 echo '<div class="notice notice-warning"><p>No field groups found for the Theme Settings page. Please register fields using the code below:</p></div>';
                 
-                echo '<pre style="background:#f8f9fa;padding:15px;border:1px solid #ddd;overflow:auto;">'
+                echo '<pre style="background:#f8f9fa;padding:15px;border:1px solid #ddd;overflow:auto;">
 // Register ACF fields for theme settings
 function register_theme_settings_fields() {
     if (!function_exists(\'acf_add_local_field_group\'))
