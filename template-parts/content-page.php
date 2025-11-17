@@ -10,7 +10,7 @@
         the_content();
 
         wp_link_pages([
-            'before' => '<div class="page-links">' . esc_html__('Pages:', 'tailwindwp'),
+            'before' => '<div class="page-links">' . esc_html__('Pages:', 'mvw'),
             'after'  => '</div>',
         ]);
         ?>

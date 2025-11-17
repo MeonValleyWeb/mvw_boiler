@@ -22,8 +22,8 @@ if (!function_exists('mvw_setup')) {
 
         // Register navigation menus
         register_nav_menus([
-            'primary' => esc_html__('Primary Menu', 'tailwindwp'),
-            'footer' => esc_html__('Footer Menu', 'tailwindwp'),
+            'primary' => esc_html__('Primary Menu', 'mvw'),
+            'footer' => esc_html__('Footer Menu', 'mvw'),
         ]);
 
         // Switch default core markup to output valid HTML5

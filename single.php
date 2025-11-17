@@ -18,8 +18,8 @@ get_header();
 
                 // Post navigation
                 the_post_navigation([
-                    'prev_text' => '<div class="meta-nav text-sm text-gray-500">' . esc_html__('Previous', 'tailwindwp') . '</div><div class="post-title font-medium">%title</div>',
-                    'next_text' => '<div class="meta-nav text-sm text-gray-500">' . esc_html__('Next', 'tailwindwp') . '</div><div class="post-title font-medium">%title</div>',
+                    'prev_text' => '<div class="meta-nav text-sm text-gray-500">' . esc_html__('Previous', 'mvw') . '</div><div class="post-title font-medium">%title</div>',
+                    'next_text' => '<div class="meta-nav text-sm text-gray-500">' . esc_html__('Next', 'mvw') . '</div><div class="post-title font-medium">%title</div>',
                     'class' => 'border-t border-b border-gray-200 py-4 my-8 grid md:grid-cols-2 gap-4',
                 ]);
             endwhile; // End of the loop.
