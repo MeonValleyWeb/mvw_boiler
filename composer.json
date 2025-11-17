@@ -1,0 +1,12 @@
+{
+  "name": "meonvalleyweb/mvw-boiler",
+  "description": "Meon Valley Web boilerplate theme",
+  "type": "wordpress-theme",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "MVWBoiler\\": "app/"
+    }
+  },
+  "require": {}
+}
