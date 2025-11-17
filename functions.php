@@ -12,6 +12,11 @@ define('MVW_VERSION', '1.0.0');
 define('MVW_DIR', get_template_directory());
 define('MVW_URI', get_template_directory_uri());
 
+// Load shared helpers (centralised to avoid duplicates)
+if (file_exists(MVW_DIR . '/inc/helpers.php')) {
+    require_once MVW_DIR . '/inc/helpers.php';
+}
+
 /**
  * Theme setup
  */
@@ -98,23 +103,10 @@ function mvw_scripts() {
 }
 add_action('wp_enqueue_scripts', 'mvw_scripts');
 
-/**
- * Register ACF options page
+/*
+ * ACF options page is registered in `inc/theme-settings.php`.
+ * Keep registration centralized there to avoid duplicate registrations.
  */
-function mvw_acf_options_page() {
-    if (function_exists('acf_add_options_page')) {
-        acf_add_options_page([
-            'page_title' => 'Theme Options',
-            'menu_title' => 'Theme Options',
-            'menu_slug' => 'theme-options',
-            'capability' => 'edit_theme_options',
-            'redirect' => false,
-            'icon_url' => 'dashicons-admin-customizer',
-            'position' => 59,
-        ]);
-    }
-}
-add_action('acf/init', 'mvw_acf_options_page');
 
 /**
  * Generate inline CSS from theme settings
@@ -124,11 +116,15 @@ function mvw_custom_colors() {
         return;
     }
     
-    // Get color settings
-    $primary_color = get_field('theme_colors_primary_color', 'option') ?: '#0ea5e9';
-    $secondary_color = get_field('theme_colors_secondary_color', 'option') ?: '#64748b';
-    
-    // Convert hex to RGB for alpha colors
+    // Get color settings from grouped ACF field `theme_colors`
+    $primary_color = mvw_get_option('theme_colors', 'primary_color', '#0ea5e9');
+    $secondary_color = mvw_get_option('theme_colors', 'secondary_color', '#64748b');
+
+    // Sanitize color values; fallback to defaults when invalid
+    $primary_color = sanitize_hex_color($primary_color) ?: '#0ea5e9';
+    $secondary_color = sanitize_hex_color($secondary_color) ?: '#64748b';
+
+    // Convert hex to RGB for alpha colors (helper in inc/helpers.php)
     $primary_rgb = mvw_hex_to_rgb($primary_color);
     $secondary_rgb = mvw_hex_to_rgb($secondary_color);
     
@@ -168,33 +164,7 @@ add_action('wp_enqueue_scripts', 'mvw_custom_colors', 20);
 /**
  * Helper function to convert HEX to RGB
  */
-function mvw_hex_to_rgb($hex) {
-    $hex = str_replace('#', '', $hex);
-    
-    if (strlen($hex) == 3) {
-        $r = hexdec(substr($hex, 0, 1) . substr($hex, 0, 1));
-        $g = hexdec(substr($hex, 1, 1) . substr($hex, 1, 1));
-        $b = hexdec(substr($hex, 2, 1) . substr($hex, 2, 1));
-    } else {
-        $r = hexdec(substr($hex, 0, 2));
-        $g = hexdec(substr($hex, 2, 2));
-        $b = hexdec(substr($hex, 4, 2));
-    }
-    
-    return "{$r}, {$g}, {$b}";
-}
-
-/**
- * Get theme option helper function
- */
-function mvw_get_option($option_name, $default = '') {
-    if (!function_exists('get_field')) {
-        return $default;
-    }
-    
-    $value = get_field($option_name, 'option');
-    return $value !== null && $value !== '' ? $value : $default;
-}
+/* Helpers are now located in `inc/helpers.php`. */
 
 /**
  * Email Delivery Configuration
@@ -212,12 +182,12 @@ function mvw_get_option($option_name, $default = '') {
  * Load theme files and components
  */
 $includes = [
-    'inc/acf-fields.php',              // ACF fields registration
-    'inc/blocks.php',                  // Block templates
-    'inc/template-functions.php',      // Custom template functions
-    'inc/template-tags.php',           // Template tags
-    'inc/widgets.php',                 // Widget areas
-    'inc/customizer.php',              // Theme customizer
+    'inc/acf.php',
+    'inc/shortcodes.php',
+    'inc/setup.php',
+    'inc/theme-settings.php',
+    'inc/customizer.php',
+    'inc/widgets.php',
 ];
 
 foreach ($includes as $file) {

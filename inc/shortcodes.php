@@ -5,12 +5,13 @@
 
 /**
  * Creates a styled contact form shortcode
- * Usage: [tailwindwp_contact_form]
+ * Usage: [mvw_contact_form form_id="123" title="Contact Us"]
  */
-function tailwindwp_contact_form_shortcode($atts) {
+function mvw_contact_form_shortcode($atts) {
     $atts = shortcode_atts([
-        'title' => esc_html__('Contact Us', 'tailwindwp'),
-        'description' => esc_html__('Fill out the form below and we\'ll get back to you as soon as possible.', 'tailwindwp'),
+        'form_id' => '',
+        'title' => esc_html__('Contact Us', 'mvw'),
+        'description' => esc_html__('Fill out the form below and we\'ll get back to you as soon as possible.', 'mvw'),
     ], $atts);
 
     ob_start();
@@ -25,22 +26,26 @@ function tailwindwp_contact_form_shortcode($atts) {
         <?php endif; ?>
         
         <?php 
-        if (function_exists('wpcf7_contact_form_tag_func')) {
-            echo do_shortcode('[contact-form-7 id="FORM_ID" title="Contact Form"]');
+        if (!empty($atts['form_id']) && function_exists('wpcf7_contact_form')) {
+            // Allow passing the CF7 form ID via the shortcode attribute
+            echo do_shortcode('[contact-form-7 id="' . esc_attr($atts['form_id']) . '" title="Contact Form"]');
+        } elseif (function_exists('wpcf7_contact_form')) {
+            // CF7 is present but no form_id provided
+            echo '<p class="text-yellow-600">' . esc_html__('Please provide a Contact Form 7 form ID to this shortcode.', 'mvw') . '</p>';
         } else {
-            echo '<p class="text-red-600">' . esc_html__('Please install and activate Contact Form 7 plugin.', 'tailwindwp') . '</p>';
+            echo '<p class="text-red-600">' . esc_html__('Please install and activate Contact Form 7 plugin.', 'mvw') . '</p>';
         }
         ?>
     </div>
     <?php
     return ob_get_clean();
 }
-add_shortcode('tailwindwp_contact_form', 'tailwindwp_contact_form_shortcode');
+add_shortcode('mvw_contact_form', 'mvw_contact_form_shortcode');
 
 /**
  * Amazon SES Integration
  */
-function tailwindwp_ses_smtp($phpmailer) {
+function mvw_ses_smtp($phpmailer) {
     // Only configure if constants are defined (typically in wp-config.php)
     if (defined('SES_SMTP_HOST') && defined('SES_SMTP_USERNAME') && defined('SES_SMTP_PASSWORD')) {
         $phpmailer->isSMTP();
@@ -57,4 +62,4 @@ function tailwindwp_ses_smtp($phpmailer) {
         }
     }
 }
-add_action('phpmailer_init', 'tailwindwp_ses_smtp');
+add_action('phpmailer_init', 'mvw_ses_smtp');

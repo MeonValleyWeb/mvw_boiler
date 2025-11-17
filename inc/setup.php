@@ -3,13 +3,13 @@
  * Theme setup functions
  */
 
-if (!function_exists('tailwindwp_setup')) {
+if (!function_exists('mvw_setup')) {
     /**
      * Sets up theme defaults and registers support for various WordPress features
      */
-    function tailwindwp_setup() {
+    function mvw_setup() {
         // Make theme available for translation
-        load_theme_textdomain('tailwindwp', TAILWINDWP_DIR . '/languages');
+        load_theme_textdomain('mvw', defined('MVW_DIR') ? MVW_DIR . '/languages' : get_template_directory() . '/languages');
 
         // Add default posts and comments RSS feed links to head
         add_theme_support('automatic-feed-links');
@@ -56,12 +56,14 @@ if (!function_exists('tailwindwp_setup')) {
         ]);
     }
 }
-add_action('after_setup_theme', 'tailwindwp_setup');
+add_action('after_setup_theme', 'mvw_setup');
 
 /**
  * Set the content width in pixels
  */
-function tailwindwp_content_width() {
-    $GLOBALS['content_width'] = apply_filters('tailwindwp_content_width', 1280);
+if (!function_exists('mvw_content_width')) {
+    function mvw_content_width() {
+        $GLOBALS['content_width'] = apply_filters('mvw_content_width', 1280);
+    }
+    add_action('after_setup_theme', 'mvw_content_width', 0);
 }
-add_action('after_setup_theme', 'tailwindwp_content_width', 0);
